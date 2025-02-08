@@ -1,5 +1,5 @@
 # Etapa 1: Imagem base do Java
-FROM openjdk:17-jdk-slim as build
+FROM openjdk:17-jdk as build
 
 # Diretório de trabalho dentro do container
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/demo.jar demo.jar
 
 # Etapa 2: Imagem para rodar a aplicação
-FROM openjdk:17-jre-slim
+FROM openjdk:17-jre
 
 # Diretório de trabalho no container
 WORKDIR /app
