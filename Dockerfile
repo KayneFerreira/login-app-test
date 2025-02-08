@@ -1,8 +1,24 @@
-FROM maven:3.8.2-openjdk-17 AS build
-COPY . .
-RUN mvn clean package -Pprod -DskipTests
-FROM openjdk:17-jdk-slim
-COPY --from=build /target/logx-0.0.1-SNAPSHOT.jar demo.jar
+# Etapa 1: Imagem base do Java
+FROM openjdk:17-jdk-slim as build
+
+# Diretório de trabalho dentro do container
+WORKDIR /app
+
+# Copia o arquivo JAR gerado no seu sistema local para o container
+COPY target/demo.jar demo.jar
+
+# Etapa 2: Imagem para rodar a aplicação
+FROM openjdk:17-jre-slim
+
+# Diretório de trabalho no container
+WORKDIR /app
+
+# Copiar o arquivo JAR da etapa anterior
+COPY --from=build /app/demo.jar /app/demo.jar
+
+# Expor a porta na qual a aplicação vai rodar (caso seja Spring Boot, por padrão, é a 8080)
 EXPOSE 8080
-ENTRYPOINT [“java”,“-jar”,“demo.jar”]
+
+# Comando para rodar a aplicação ao iniciar o container
+ENTRYPOINT ["java", "-jar", "demo.jar"]
 
